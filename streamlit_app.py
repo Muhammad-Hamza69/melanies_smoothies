@@ -126,7 +126,9 @@ session = cnx.session()
 
 # Bina Pandas ke data ko handle karne ka sahi tareeka: 
 # Dataframe se values nikaal kar unhe ek list bana lein
-my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
+my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'),col('SEARCH_ON'))
+st.dataframe(data = my_dataframe, use_container_width = True)
+st.stop()
 
 # --- Multiselect ---
 ingredients_list = st.multiselect(
