@@ -156,13 +156,14 @@ if ingredients_list:
         ingredients_string += fruit_name + ' '
 
         search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit_name, 'SEARCH_ON'].iloc[0]
-        st.write('The search value for ', fruit_name,' is ', search_on, '.')
+        # st.write('The search value for ', fruit_name,' is ', search_on, '.')
         
         # Heading: Ab yeh poora naam dikhayega (e.g., Tangerine Nutrition Information)
         st.subheader(fruit_name + ' Nutrition Information')
         
         # API Call: Poore naam ke sath call hogi
-        smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + fruit_name)
+        # smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + fruit_name)
+        smoothiefroot_response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{search_on}")
         
         # Table Display: Jaisa image mein hai
         st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
