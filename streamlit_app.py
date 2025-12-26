@@ -135,8 +135,8 @@ st.stop()
 
 # Convert the Snowpark Dataframe to a Pandas Dataframe so we can use the LOC function 
 pd_df = my_dataframe.to_pandas()
-st.dataframe(pd_df)
-st.stop()
+# st.dataframe(pd_df)
+# st.stop()
 
 # --- Multiselect ---
 ingredients_list = st.multiselect(
@@ -155,8 +155,8 @@ if ingredients_list:
         
         ingredients_string += fruit_name + ' '
 
-        # search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit_name, 'SEARCH_ON'].iloc[0]
-        # st.write('The search value for ', fruit_name,' is ', search_on, '.')
+        search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
+        st.write('The search value for ', fruit_chosen,' is ', search_on, '.')
         
         # Heading: Ab yeh poora naam dikhayega (e.g., Tangerine Nutrition Information)
         st.subheader(fruit_name + ' Nutrition Information')
