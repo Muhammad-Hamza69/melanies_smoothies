@@ -112,52 +112,52 @@ import streamlit as st
 import requests
 from snowflake.snowpark.functions import col
 
-# --- UI Setup ---
+# --- Title ---
 st.title(":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
 st.write("choose the fruits u want in your custom Smoothie!")
 
-# User Input for Name
+# User Input
 name_on_order = st.text_input("Name on Smoothie: ")
 st.write("The name on your Smoothie will be: ", name_on_order)
 
 # --- Snowflake Connection ---
 cnx = st.connection("snowflake")
 session = cnx.session()
+
+# Bina Pandas ke data ko handle karne ka sahi tareeka: 
+# Dataframe se values nikaal kar unhe ek list bana lein
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 
-# --- Ingredient Selection ---
+# --- Multiselect ---
 ingredients_list = st.multiselect(
     'Choose up to 5 ingredients: ',
     my_dataframe,
     max_selections = 5
 )
 
-# --- Display Nutrition & Build Insert String ---
 if ingredients_list:
     ingredients_string = ''
   
     for fruit_chosen in ingredients_list:
-        # Snowflake Row object se string nikalne ke liye [0] use karein
-        fruit_name = fruit_chosen[0]
+        # AGAR AAPKA PICHLA CODE 'T' DIKHA RAHA THA, TOH YAHAN [0] HATADEIN
+        # Streamlit ab Row objects ko khud hi string mein convert kar deta hai
+        fruit_name = fruit_chosen 
+        
         ingredients_string += fruit_name + ' '
         
-        # Har fruit ka apna header
+        # Heading: Ab yeh poora naam dikhayega (e.g., Tangerine Nutrition Information)
         st.subheader(fruit_name + ' Nutrition Information')
         
-        # API Call (Dynamic URL)
+        # API Call: Poore naam ke sath call hogi
         smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + fruit_name)
         
-        # Table display
-        # Note: Agar fruit database mein nahi hoga (jaise Ximenia), 
-        # toh API khud error message bhejegi jo table mein show ho jayega.
-        sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+        # Table Display: Jaisa image mein hai
+        st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
-    # --- Database Insert Logic ---
-    # SQL query build karein
+    # --- Order Submission ---
     my_insert_stmt = """ insert into smoothies.public.orders(ingredients, name_on_order)
             values ('""" + ingredients_string + """', '""" + name_on_order + """')"""
     
-    # Submit Button
     time_to_insert = st.button('Submit Order')
 
     if time_to_insert:
